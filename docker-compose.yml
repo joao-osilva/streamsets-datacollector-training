@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  datacollector:
+    command: dc
+    container_name: data-collector
+    image: semantix/data-collector-training:1.0.0
+    ports:
+      - 18630:18630
+    volumes:
+      - $PWD/streamsets/resources:/home/sdc/resources
+      - $PWD/streamsets/sdc-data:/data:rw
+      - $PWD/streamsets/sdc-log:/logs:rw
+      - $PWD/streamsets/sdc-stagelibs:/opt/streamsets-datacollector-3.4.3/streamsets-libs-extras
+  mysql:
+    container_name: mysql
+    image: mysql/mysql-server:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - $PWD/mysql/data:/var/lib/mysql      
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.2.0
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      - $PWD/elasticsearch/data:/usr/share/elasticsearch/data      
+    environment:
+      - node.name=node-1
+      - cluster.name=training-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:5.2.0
+    depends_on: 
+      - elasticsearch
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme

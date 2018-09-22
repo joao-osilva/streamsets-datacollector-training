@@ -1,0 +1,7 @@
+elasticsearch/
+kafka/
+my.cnf
+mysql/
+streamsets/*
+!streamsets/Dockerfile
+*.log
