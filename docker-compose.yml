@@ -18,7 +18,14 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - $PWD/mysql/data:/var/lib/mysql      
+      - $PWD/mysql/data:/var/lib/mysql
+  mongodb:
+    container_name: mongodb
+    image: mongo:3.6.8
+    ports:
+      - 27017:27017
+    volumes:
+      - $PWD/mongodb/db/:/data/db      
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:5.2.0

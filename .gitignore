@@ -2,6 +2,7 @@ elasticsearch/
 kafka/
 my.cnf
 mysql/
+mongodb/
 streamsets/*
 !streamsets/Dockerfile
 *.log
