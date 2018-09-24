@@ -62,7 +62,7 @@ The training topics are:
 #### Apache Kafka
 - Create a topic to store pipeline errors:
 
-  `$ docker exec -ti kafka-1 bash -c "kafka-topics --create --zookeeper zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181 --replication-factor 3 --partitions 3 --topic datacollector-errors --if-not-exists"``
+  `$ docker exec -ti kafka-1 bash -c "kafka-topics --create --zookeeper zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181 --replication-factor 3 --partitions 3 --topic datacollector-errors --if-not-exists"`
 
 
 #### Streamsets Data Collector
