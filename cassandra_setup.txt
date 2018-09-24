@@ -1,0 +1,2 @@
+CREATE KEYSPACE streamsets WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': '1'};
+CREATE TABLE streamsets.pipeline_errors (event_time timestamp PRIMARY KEY, url text, ip text);
