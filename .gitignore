@@ -5,4 +5,8 @@ mysql/
 mongodb/
 streamsets/*
 !streamsets/Dockerfile
+!streamsets/sdc.properties
+cassandra/*
+cassandra_setup.txt
+portainer/
 *.log

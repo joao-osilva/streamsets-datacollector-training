@@ -5,13 +5,16 @@ services:
     command: dc
     container_name: data-collector
     image: semantix/data-collector-training:1.0.0
+    dns: 8.8.8.8
     ports:
       - 18630:18630
+      - 465:465
     volumes:
+      - $PWD/streamsets/sdc.properties:/etc/sdc/sdc.properties:ro
       - $PWD/streamsets/resources:/home/sdc/resources
       - $PWD/streamsets/sdc-data:/data:rw
       - $PWD/streamsets/sdc-log:/logs:rw
-      - $PWD/streamsets/sdc-stagelibs:/opt/streamsets-datacollector-3.4.3/streamsets-libs-extras
+      - $PWD/streamsets/sdc-stagelibs:/opt/streamsets-datacollector-3.4.3/streamsets-libs-extras    
   mysql:
     container_name: mysql
     image: mysql/mysql-server:5.7
@@ -25,7 +28,18 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - $PWD/mongodb/db/:/data/db      
+      - $PWD/mongodb/db/:/data/db
+  cassandra:
+    container_name: cassandra
+    image: cassandra:3.11.3
+    ports:      
+      - 7000-7001:7000-7001
+      - 7199:7199
+      - 9042:9042
+      - 9160:9160
+    volumes:
+      - $PWD/cassandra_setup.txt:/root/cassandra_setup.txt
+      - $PWD/cassandra/data:/var/lib/cassandra
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:5.2.0
@@ -52,3 +66,87 @@ services:
     environment:
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
+  zookeeper-1:
+    container_name: zookeeper-1
+    image: confluentinc/cp-zookeeper:5.0.0
+    volumes:
+      - $PWD/kafka/zookeeper-1/data:/var/lib/zookeeper/data
+      - $PWD/kafka/zookeeper-1/txn-logs:/var/lib/zookeeper/log
+    environment:
+      - ZOOKEEPER_SERVER_ID=1
+      - ZOOKEEPER_CLIENT_PORT=22181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_INIT_LIMIT=5
+      - ZOOKEEPER_SYNC_LIMIT=2
+      - ZOOKEEPER_SERVERS=zookeeper-1:22888:23888;zookeeper-2:32888:33888;zookeeper-3:42888:43888
+  zookeeper-2:
+    container_name: zookeeper-2
+    image: confluentinc/cp-zookeeper:5.0.0
+    volumes:
+      - $PWD/kafka/zookeeper-2/data:/var/lib/zookeeper/data
+      - $PWD/kafka/zookeeper-2/txn-logs:/var/lib/zookeeper/log
+    environment:
+      - ZOOKEEPER_SERVER_ID=2
+      - ZOOKEEPER_CLIENT_PORT=32181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_INIT_LIMIT=5
+      - ZOOKEEPER_SYNC_LIMIT=2
+      - ZOOKEEPER_SERVERS=zookeeper-1:22888:23888;zookeeper-2:32888:33888;zookeeper-3:42888:43888
+  zookeeper-3:
+    container_name: zookeeper-3
+    image: confluentinc/cp-zookeeper:5.0.0
+    volumes:
+      - $PWD/kafka/zookeeper-3/data:/var/lib/zookeeper/data
+      - $PWD/kafka/zookeeper-3/txn-logs:/var/lib/zookeeper/log
+    environment:
+      - ZOOKEEPER_SERVER_ID=3
+      - ZOOKEEPER_CLIENT_PORT=42181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_INIT_LIMIT=5
+      - ZOOKEEPER_SYNC_LIMIT=2
+      - ZOOKEEPER_SERVERS=zookeeper-1:22888:23888;zookeeper-2:32888:33888;zookeeper-3:42888:43888
+  kafka-1:
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    container_name: kafka-1
+    image: confluentinc/cp-kafka:5.0.0
+    volumes:
+      - $PWD/kafka/kafka-1/data:/var/lib/kafka/data
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:29092
+  kafka-2:
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    container_name: kafka-2
+    image: confluentinc/cp-kafka:5.0.0
+    volumes:
+      - $PWD/kafka/kafka-2/data:/var/lib/kafka/data
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:39092
+  kafka-3:
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    container_name: kafka-3
+    image: confluentinc/cp-kafka:5.0.0
+    volumes:
+      - $PWD/kafka/kafka-3/data:/var/lib/kafka/data
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:49092
+  portainer:
+    command: -H unix:///var/run/docker.sock --no-auth
+    container_name: portainer
+    image: portainer/portainer:1.19.2
+    ports:
+      - 9000:9000    
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/portainer/data:/data
