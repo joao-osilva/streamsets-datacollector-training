@@ -8,7 +8,7 @@ services:
     dns: 8.8.8.8
     ports:
       - 18630:18630
-      - 465:465
+      - 8000:8000
     volumes:
       - $PWD/streamsets/sdc.properties:/etc/sdc/sdc.properties:rw
       - $PWD/streamsets/resources:/home/sdc/resources
