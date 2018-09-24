@@ -10,7 +10,7 @@ services:
       - 18630:18630
       - 465:465
     volumes:
-      - $PWD/streamsets/sdc.properties:/etc/sdc/sdc.properties:ro
+      - $PWD/streamsets/sdc.properties:/etc/sdc/sdc.properties:rw
       - $PWD/streamsets/resources:/home/sdc/resources
       - $PWD/streamsets/sdc-data:/data:rw
       - $PWD/streamsets/sdc-log:/logs:rw

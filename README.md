@@ -22,6 +22,11 @@ The training topics are:
   - [Analyze logs as time series](#analyze-logs-as-time-series)
 
 ## Setup
+#### Configure SMTP server for Data Collector
+- Open `streamsets/sdc.properties` file and add your configuration for sending email(Gmail only):
+
+  ![sdc_prop](https://i.imgur.com/pc6VvcP.png)
+
 #### Install Docker and Docker Compose
 - Just follow the instructions based on you OS, [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -44,10 +49,6 @@ The training topics are:
   ![portainer_3](https://i.imgur.com/QhhC8L7.png)
 
 #### MySQL Server
-- Check whether the container is up and running:
-
-  `$ docker ps | grep mysql`
-
 - The first time you spin up MySQL you need to change the default password and create a new user that is enable to access the server remotely. Execute the script to do this:
 
   `$ ./mysql_setup.sh`
@@ -59,19 +60,13 @@ The training topics are:
 
   `$ docker exec -it cassandra bash -c "cqlsh -f /root/cassandra_setup.txt"`
 
-#### Apache Kafka
-- Create a topic to store pipeline errors:
-
-  `$ docker exec -ti kafka-1 bash -c "kafka-topics --create --zookeeper zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181 --replication-factor 3 --partitions 3 --topic datacollector-errors --if-not-exists"`
-
-
 #### Streamsets Data Collector
 - Login to Data Collector at `http://localhost:18630` with user/pass `admin:admin`
 
   ![sql_driver_1](https://i.imgur.com/io4efEV.png)
 
 **Configure MySQL JDBC driver**
-- Download the driver and [here](https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.47.zip) and extract the folder
+- Download the driver [here](https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.47.zip) and extract the folder
 
 - Go to *Package Manager* -> *External Libraries*, upload the driver and restart Data Collector:
 
@@ -90,9 +85,9 @@ The training topics are:
 
   ![fake_log_1](https://i.imgur.com/wTitKrA.png)
 
-- Execute the script to generate the log:
+- Go to the directory and execute the script to generate the log:
 
-  `$ python <path>/streamsets-datacollector-training/streamsets/resources/apache-fake-log-gen.py -n 0 -o LOG -p WEB`
+  `streamsets/resources$ python apache-fake-log-gen.py -n 0 -o LOG -p WEB`
 
   **OBS:** "-n 0" is to generate an infinite log file, "-o LOG" is the output type, "-p WEB" is the file prefix.
 
@@ -180,7 +175,7 @@ The training topics are:
 
   ![kibana_dash_1](https://i.imgur.com/wrnydER.png)
 
-- Import [this](asd) dashboard by going to *Dashboard* -> *Open* -> *Manage Dashboards* -> *Import*:
+- Import [this](https://github.com/joao-osilva/streamsets-datacollector-training/blob/master/resources/kibana/apache_logs_dashboard.json) dashboard by going to *Dashboard* -> *Open* -> *Manage Dashboards* -> *Import*:
 
   ![kibana_dash_2](https://i.imgur.com/ZizVfgb.png)
 
