@@ -1,7 +1,25 @@
 # Streamsets Data Collector - Training
 > By: João Silva (vitor191291@gmail.com)
 
-[Monitoring file ingestion](#monitoring-file-ingestion)
+This training aims to show some cool features that Streamsets Data Collector has and how one can levarage them in real scenarios.
+
+The applications used were:
+  - Streamsets Data Collector 3.4.3
+  - MySQL Server 5.7
+  - MongoDB 3.6.8
+  - Apache Cassandra 3.11.3
+  - Elasticsearch 5.2.0
+  - Kibana 5.2.0
+  - Apache Zookeeper(Confluent Platform) 5.0.0
+  - Apache Kafka(Confluent Platform) 5.0.0
+  - Portainer
+
+The training topics are:
+- [Setup](#setup)
+- [Cases](#cases)
+  - [Streaming Apache server logs to Elasticsearch](#streaming-apache-server-logs-to-elasticsearch)
+  - [Monitoring file ingestion](#monitoring-file-ingestion)
+  - [Analyze logs as time series](#analyze-logs-as-time-series)
 
 ## Setup
 #### Install Docker and Docker Compose
@@ -64,7 +82,7 @@
   ![sql_driver_5](https://i.imgur.com/k7waJ58.png)
 
 ## Cases
-### 1)Streaming Apache server logs to Elasticsearch
+### Streaming Apache server logs to Elasticsearch
 #### Create a log file
 - In order to simulate a constantly growing apache log we are going to use the "Fake Apache Log Generator" script. So you'll need to have python installed on your OS, and then you can just follow the steps on theirs [github page](https://github.com/kiritbasu/Fake-Apache-Log-Generator).
 
@@ -280,7 +298,7 @@
   { "_id" : ObjectId("5ba71b62149b3f003551258e"), "json" : "{\"clientip\":\"129.94.144.152\",\"lat\":-33.6994,\"lon\":150.9536}" }
   ````
 
-### 3)Analyze logs as time series
+### Analyze logs as time series
 #### Create a new pipeline
 - Add a **Kafka Consumer** origin and set the *Broker URI* to "kafka-1:29092", *Zookeeper URI* to "zookeeper-1:23888,zookeeper-2:33888,zookeeper-3:43888", *Topic* to "pipeline-errors", *Max Batch Size (records)* to 500 and Kafka's *auto.offset.reset* to "earliest". On *Data format* tab set to SDC Record:
 
@@ -317,14 +335,14 @@
   $ docker exec -it cassandra bash -c "cqlsh -e 'SELECT * FROM streamsets.pipeline_errors LIMIT 10;'"
 
   event_time                      | ip                        | url
---------------------------------+---------------------------+---------------------------------------------------
-1995-07-01 04:00:25.000000+0000 |  waters-gw.starway.net.au |          /shuttle/missions/51-l/mission-51-l.html
-1995-07-01 04:00:35.000000+0000 |     ppp-mia-30.shadow.net |                        /images/ksclogo-medium.gif
-1995-07-01 04:00:18.000000+0000 | ppptky391.asahi-net.or.jp |                             /facts/about_ksc.html
-1995-07-01 04:00:14.000000+0000 |      unicomp6.unicomp.net |                      /shuttle/countdown/count.gif
-1995-07-01 04:00:12.000000+0000 |        burger.letters.com |                        /images/NASA-logosmall.gif
-1995-07-01 04:00:15.000000+0000 |               d104.aa.net |                      /shuttle/countdown/count.gif
-1995-07-01 04:00:59.000000+0000 |       ppp-nyc-3-1.ios.com | /shuttle/missions/sts-71/images/KSC-95EC-0882.jpg
-1995-07-01 04:00:50.000000+0000 |    gayle-gaston.tenet.edu |      /shuttle/missions/sts-71/mission-sts-71.html
-1995-07-01 04:00:41.000000+0000 |     ppp-mia-30.shadow.net |                               /shuttle/countdown/
+  --------------------------------+---------------------------+---------------------------------------------------
+  1995-07-01 04:00:25.000000+0000 |  waters-gw.starway.net.au |          /shuttle/missions/51-l/mission-51-l.html
+  1995-07-01 04:00:35.000000+0000 |     ppp-mia-30.shadow.net |                        /images/ksclogo-medium.gif
+  1995-07-01 04:00:18.000000+0000 | ppptky391.asahi-net.or.jp |                             /facts/about_ksc.html
+  1995-07-01 04:00:14.000000+0000 |      unicomp6.unicomp.net |                      /shuttle/countdown/count.gif
+  1995-07-01 04:00:12.000000+0000 |        burger.letters.com |                        /images/NASA-logosmall.gif
+  1995-07-01 04:00:15.000000+0000 |               d104.aa.net |                      /shuttle/countdown/count.gif
+  1995-07-01 04:00:59.000000+0000 |       ppp-nyc-3-1.ios.com | /shuttle/missions/sts-71/images/KSC-95EC-0882.jpg
+  1995-07-01 04:00:50.000000+0000 |    gayle-gaston.tenet.edu |      /shuttle/missions/sts-71/mission-sts-71.html
+  1995-07-01 04:00:41.000000+0000 |     ppp-mia-30.shadow.net |                               /shuttle/countdown/
   ```
