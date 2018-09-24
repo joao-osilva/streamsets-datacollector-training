@@ -10,36 +10,36 @@ services:
       - 18630:18630
       - 8000:8000
     volumes:
-      - $PWD/streamsets/sdc.properties:/etc/sdc/sdc.properties:rw
-      - $PWD/streamsets/resources:/home/sdc/resources
-      - $PWD/streamsets/sdc-data:/data:rw
-      - $PWD/streamsets/sdc-log:/logs:rw
-      - $PWD/streamsets/sdc-stagelibs:/opt/streamsets-datacollector-3.4.3/streamsets-libs-extras    
+      - ./streamsets/sdc.properties:/etc/sdc/sdc.properties:rw
+      - ./streamsets/resources:/home/sdc/resources
+      - ./streamsets/sdc-data:/data:rw
+      - ./streamsets/sdc-log:/logs:rw
+      - ./streamsets/sdc-stagelibs:/opt/streamsets-datacollector-3.4.3/streamsets-libs-extras
   mysql:
     container_name: mysql
     image: mysql/mysql-server:5.7
     ports:
       - 3306:3306
     volumes:
-      - $PWD/mysql/data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
   mongodb:
     container_name: mongodb
     image: mongo:3.6.8
     ports:
       - 27017:27017
     volumes:
-      - $PWD/mongodb/db/:/data/db
+      - ./mongodb/db/:/data/db
   cassandra:
     container_name: cassandra
     image: cassandra:3.11.3
-    ports:      
+    ports:
       - 7000-7001:7000-7001
       - 7199:7199
       - 9042:9042
       - 9160:9160
     volumes:
-      - $PWD/cassandra_setup.txt:/root/cassandra_setup.txt
-      - $PWD/cassandra/data:/var/lib/cassandra
+      - ./cassandra_setup.txt:/root/cassandra_setup.txt
+      - ./cassandra/data:/var/lib/cassandra
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:5.2.0
@@ -50,7 +50,7 @@ services:
     ports:
       - 9200:9200
     volumes:
-      - $PWD/elasticsearch/data:/usr/share/elasticsearch/data      
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
     environment:
       - node.name=node-1
       - cluster.name=training-cluster
@@ -59,7 +59,7 @@ services:
   kibana:
     container_name: kibana
     image: docker.elastic.co/kibana/kibana:5.2.0
-    depends_on: 
+    depends_on:
       - elasticsearch
     ports:
       - 5601:5601
@@ -70,8 +70,8 @@ services:
     container_name: zookeeper-1
     image: confluentinc/cp-zookeeper:5.0.0
     volumes:
-      - $PWD/kafka/zookeeper-1/data:/var/lib/zookeeper/data
-      - $PWD/kafka/zookeeper-1/txn-logs:/var/lib/zookeeper/log
+      - ./kafka/zookeeper-1/data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-1/txn-logs:/var/lib/zookeeper/log
     environment:
       - ZOOKEEPER_SERVER_ID=1
       - ZOOKEEPER_CLIENT_PORT=22181
@@ -83,8 +83,8 @@ services:
     container_name: zookeeper-2
     image: confluentinc/cp-zookeeper:5.0.0
     volumes:
-      - $PWD/kafka/zookeeper-2/data:/var/lib/zookeeper/data
-      - $PWD/kafka/zookeeper-2/txn-logs:/var/lib/zookeeper/log
+      - ./kafka/zookeeper-2/data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-2/txn-logs:/var/lib/zookeeper/log
     environment:
       - ZOOKEEPER_SERVER_ID=2
       - ZOOKEEPER_CLIENT_PORT=32181
@@ -96,8 +96,8 @@ services:
     container_name: zookeeper-3
     image: confluentinc/cp-zookeeper:5.0.0
     volumes:
-      - $PWD/kafka/zookeeper-3/data:/var/lib/zookeeper/data
-      - $PWD/kafka/zookeeper-3/txn-logs:/var/lib/zookeeper/log
+      - ./kafka/zookeeper-3/data:/var/lib/zookeeper/data
+      - ./kafka/zookeeper-3/txn-logs:/var/lib/zookeeper/log
     environment:
       - ZOOKEEPER_SERVER_ID=3
       - ZOOKEEPER_CLIENT_PORT=42181
@@ -113,7 +113,7 @@ services:
     container_name: kafka-1
     image: confluentinc/cp-kafka:5.0.0
     volumes:
-      - $PWD/kafka/kafka-1/data:/var/lib/kafka/data
+      - ./kafka/kafka-1/data:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:29092
@@ -125,7 +125,7 @@ services:
     container_name: kafka-2
     image: confluentinc/cp-kafka:5.0.0
     volumes:
-      - $PWD/kafka/kafka-2/data:/var/lib/kafka/data
+      - ./kafka/kafka-2/data:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:39092
@@ -137,7 +137,7 @@ services:
     container_name: kafka-3
     image: confluentinc/cp-kafka:5.0.0
     volumes:
-      - $PWD/kafka/kafka-3/data:/var/lib/kafka/data
+      - ./kafka/kafka-3/data:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper-1:22181,zookeeper-2:32181,zookeeper-3:42181
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:49092
@@ -146,7 +146,7 @@ services:
     container_name: portainer
     image: portainer/portainer:1.19.2
     ports:
-      - 9000:9000    
+      - 9000:9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $PWD/portainer/data:/data
+      - ./portainer/data:/data
