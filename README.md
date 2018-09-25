@@ -1,7 +1,7 @@
 # Streamsets Data Collector - Training
 > By: João Silva (vitor191291@gmail.com)
 
-This training aims to show some cool features that Streamsets Data Collector has and how one can levarage them in real scenarios.
+This training aims to show some cool features that Streamsets Data Collector has and how one can leverage them in real scenarios.
 
 The applications used were:
   - Streamsets Data Collector 3.4.3
