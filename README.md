@@ -91,7 +91,7 @@ The training topics are:
 
   **OBS:** "-n 0" is to generate an infinite log file, "-o LOG" is the output type, "-p WEB" is the file prefix.
 
-- You should the file on the directory:
+- You should see the file on the directory:
 
     ![fake_log_2](https://i.imgur.com/IvCG2zw.png)
 
