@@ -9,3 +9,4 @@ streamsets/*
 cassandra/*
 portainer/
 *.log
+metastore_db/
